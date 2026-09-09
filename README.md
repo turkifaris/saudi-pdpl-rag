@@ -17,3 +17,11 @@ retrieval · Ollama for local generation · Streamlit
 
 ## Results
 _Evaluation table coming in week 3._
+
+## Corpus
+| Metric | Value |
+|---|---|
+| Source documents | 1 (Executive Regulations) |
+| Articles | 38 / 38 |
+| Mean article length | 1,006 chars |
+| Manual QA | 5 articles reviewed — see `eval/corpus_qa.md` |

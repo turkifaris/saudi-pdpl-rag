@@ -1,1 +1,2 @@
 - Deployment deferred to week 5. HF Spaces free tier is now Static-only; plan to use Streamlit Community Cloud.
+- Title extraction is heuristic (bidi displaces the colon separating heading from body). Better approach: use PyMuPDF get_text('dict') and detect headings by span COLOR — they are orange in the source PDF. Deferred.
