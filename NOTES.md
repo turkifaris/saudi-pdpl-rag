@@ -1,0 +1,1 @@
+- Deployment deferred to week 5. HF Spaces free tier is now Static-only; plan to use Streamlit Community Cloud.
