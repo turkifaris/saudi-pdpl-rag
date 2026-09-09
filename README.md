@@ -25,3 +25,16 @@ _Evaluation table coming in week 3._
 | Articles | 38 / 38 |
 | Mean article length | 1,006 chars |
 | Manual QA | 5 articles reviewed — see `eval/corpus_qa.md` |
+
+## Corpus
+| Metric | Value |
+|---|---|
+| Source | Executive Regulations of the Saudi PDPL |
+| Articles extracted | 38 / 38 |
+| Mean article length | 1,006 chars |
+| Manual QA | 20 articles reviewed — `eval/corpus_qa.md` |
+
+Extraction required solving four Arabic-specific problems: Unicode
+presentation forms, RTL block ordering, bidi-displaced punctuation, and
+intra-word spacing from PDF justification. Article detection improved
+from 32/38 to 38/38 as each was diagnosed and fixed.
