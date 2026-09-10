@@ -45,3 +45,19 @@ from 32/38 to 38/38 as each was diagnosed and fixed.
 | BM25 baseline | 0.73 | 0.68 |
 
 Full breakdown by question type in `eval/results.md`.
+
+## Retrieval results
+
+| System | Hit@1 | Hit@5 | paraphrase | nDCG@10 |
+|---|---|---|---|---|
+| BM25 baseline | 0.55 | 0.73 | 0.53 | 0.68 |
+| + dense (e5-small) | 0.68 | 0.88 | 0.76 | 0.79 |
+| + bge-m3 | 0.80 | 0.93 | 0.88 | 0.86 |
+| **− derived title** | 0.79 | **0.97** | **0.94** | **0.88** |
+
+Evaluated on 85 hand-labelled Arabic questions across five question types.
+Hybrid BM25+dense fusion was tested and **rejected** (0.85 < 0.93).
+Arabic-specialised embeddings were benchmarked and **lost** to bge-m3.
+The largest single fix came from *removing* a component, not adding one.
+
+Full methodology, ablations and rejected approaches: `eval/results.md`
