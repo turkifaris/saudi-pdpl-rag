@@ -57,3 +57,33 @@ but ranks it worse at position 1 — a reranking problem, not a recall one.
 Score separation is cleaner (0/10 vs 2/10) but the margin is thin: cosine
 scores compress into 0.84–0.86, versus BM25's 4.50–6.49. A raw-score
 threshold is less robust for dense than the ordering suggests.
+
+## Hybrid (RRF) — rejected
+
+| System | Hit@1 | Hit@5 | nDCG@10 |
+|---|---|---|---|
+| BM25 | 0.55 | 0.73 | 0.68 |
+| dense (e5-small) | 0.68 | **0.88** | **0.79** |
+| hybrid RRF (1:1) | 0.64 | 0.84 | 0.76 |
+| hybrid RRF (bm25 0.3 : dense 1.0) | 0.68 | 0.85 | 0.78 |
+
+**Decision: BM25 dropped from the pipeline.**
+
+Fusion was tested because hybrid retrieval is the industry default. On this
+corpus it hurt: Hit@5 0.88 → 0.85 even after down-weighting BM25 to 0.3.
+
+Where it helped: first-position ranking (direct Hit@1 0.80 → 0.84,
+paraphrase Hit@1 0.29 → 0.35) — BM25 catches the literal token the dense
+model blurs.
+
+Where it broke: multi-article questions (Hit@5 0.90 → 0.80). Fusing a
+diffuse lexical ranking pushes correct articles out of the top-5 for
+questions whose answer spans 6 articles.
+
+It also destroys the confidence signal: RRF scores are rank-based, so
+in-scope and out-of-scope both sit at 0.02–0.03 and out-of-scope overlap
+returns to 2/10 (dense alone: 0/10).
+
+Likely cause: 38 documents give BM25 too little to discriminate on, and the
+two systems are 0.15 apart in strength — far from the near-parity fusion
+assumes.

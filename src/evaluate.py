@@ -21,6 +21,9 @@ def build(name, recs):
     if name == "dense":
         from dense import DenseRetriever
         return DenseRetriever(recs)
+    if name == "hybrid":
+        from hybrid import HybridRetriever
+        return HybridRetriever(recs)
     raise SystemExit(f"نظام غير معروف: {name}")
 
 
