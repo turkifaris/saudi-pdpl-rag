@@ -30,3 +30,30 @@ Corpus: 38 articles, Executive Regulations of the Saudi PDPL
 
 Only 2/10 out-of-scope questions score above the in-scope median — a score
 threshold is a viable first rejection mechanism, to be tuned in week 4.
+
+## Dense retrieval — multilingual-e5-small
+
+| Question type | n  | Hit@1 | Hit@5 | Rec@5 | MRR  | nDCG@10 |
+|---------------|----|-------|-------|-------|------|---------|
+| direct        | 25 | 0.80  | 0.92  | 0.92  | 0.86 | 0.89    |
+| procedural    | 23 | 0.78  | 0.91  | 0.91  | 0.82 | 0.84    |
+| paraphrase    | 17 | 0.29  | 0.76  | 0.76  | 0.47 | 0.57    |
+| multi         | 10 | 0.80  | 0.90  | 0.70  | 0.83 | 0.80    |
+| **overall**   | 75 | **0.68** | **0.88** | 0.85 | 0.76 | **0.79** |
+
+### vs BM25 baseline
+| metric | BM25 | dense | Δ |
+|---|---|---|---|
+| Hit@5 overall | 0.73 | 0.88 | **+0.15** |
+| Hit@5 paraphrase | 0.53 | 0.76 | **+0.23** |
+| Hit@5 multi | 0.60 | 0.90 | **+0.30** |
+| out-of-scope above in-scope median | 2/10 | **0/10** | — |
+
+### Key finding
+Paraphrase Hit@1 *dropped* (0.35 → 0.29) while Hit@5 rose sharply
+(0.53 → 0.76). Dense retrieval recovers the correct article far more often
+but ranks it worse at position 1 — a reranking problem, not a recall one.
+
+Score separation is cleaner (0/10 vs 2/10) but the margin is thin: cosine
+scores compress into 0.84–0.86, versus BM25's 4.50–6.49. A raw-score
+threshold is less robust for dense than the ordering suggests.

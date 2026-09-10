@@ -1,6 +1,11 @@
-"""Evaluate a retriever against the hand-labelled eval set."""
+"""Evaluate a retriever against the hand-labelled eval set.
+
+    python src/evaluate.py bm25
+    python src/evaluate.py dense
+"""
 import json
 import math
+import sys
 from collections import defaultdict
 from pathlib import Path
 from statistics import mean, median
@@ -8,6 +13,15 @@ from statistics import mean, median
 from retrieve import BM25Retriever, load
 
 K = 10
+
+
+def build(name, recs):
+    if name == "bm25":
+        return BM25Retriever(recs)
+    if name == "dense":
+        from dense import DenseRetriever
+        return DenseRetriever(recs)
+    raise SystemExit(f"نظام غير معروف: {name}")
 
 
 def dcg(rels):
@@ -20,8 +34,9 @@ def ndcg(rels, n_gold):
     return dcg(rels) / d if d else 0.0
 
 
+system = sys.argv[1] if len(sys.argv) > 1 else "bm25"
 recs = load()
-retriever = BM25Retriever(recs)
+retriever = build(system, recs)
 qs = json.loads(Path("eval/eval_set.json").read_text(encoding="utf-8"))
 
 by_type = defaultdict(list)
@@ -33,7 +48,7 @@ for q in qs:
     top = hits[0][0] if hits else 0.0
     gold = set(q["gold_articles"])
 
-    if not gold:                       # خارج النطاق
+    if not gold:
         out_scores.append(top)
         continue
     in_scores.append(top)
@@ -49,12 +64,9 @@ for q in qs:
     })
 
 allq = [m for v in by_type.values() for m in v]
+agg = lambda ms, k: mean(m[k] for m in ms) if ms else 0.0
 
-
-def agg(ms, key):
-    return mean(m[key] for m in ms) if ms else 0.0
-
-
+print(f"\n### النظام: {system}")
 print("=" * 62)
 print(f"{'':<14}{'عدد':>5}{'Hit@1':>8}{'Hit@5':>8}{'Rec@5':>8}{'MRR':>8}{'nDCG':>8}")
 print("-" * 62)
@@ -67,9 +79,5 @@ print("-" * 62)
 print(f"{'الإجمالي':<14}{len(allq):>5}{agg(allq,'hit1'):>8.2f}{agg(allq,'hit5'):>8.2f}"
       f"{agg(allq,'rec5'):>8.2f}{agg(allq,'mrr'):>8.2f}{agg(allq,'ndcg'):>8.2f}")
 print("=" * 62)
-
-print("\n--- فصل النطاق (لأجل عتبة الرفض في الأسبوع الرابع) ---")
-print(f"  داخل النطاق  ({len(in_scores):>2} سؤال): وسيط {median(in_scores):.2f}  متوسط {mean(in_scores):.2f}")
-print(f"  خارج النطاق  ({len(out_scores):>2} سؤال): وسيط {median(out_scores):.2f}  متوسط {mean(out_scores):.2f}")
-overlap = sum(1 for s in out_scores if s >= median(in_scores))
-print(f"  أسئلة خارج النطاق تتجاوز وسيط الداخل: {overlap}/{len(out_scores)}")
+print(f"فصل النطاق: داخل {median(in_scores):.2f} | خارج {median(out_scores):.2f} "
+      f"| تجاوز {sum(1 for s in out_scores if s >= median(in_scores))}/{len(out_scores)}")

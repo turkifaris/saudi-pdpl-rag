@@ -8,3 +8,4 @@
 - Eval set v1: 85 questions, 37/38 articles (art 38 = publication clause, excluded by design).
 - Drafting: ~30 AI-drafted then human-verified; rest human-authored. All gold labels human-assigned.
 - Limitation: direct/procedural phrasing is more formal than real users; paraphrase items (17) carry realistic phrasing.
+- TODO week 6: re-verify 4 eval items (personal-use phrasing, art 17 vs 36, المصلحة الحيوية scope, 2 borderline out_of_scope)
