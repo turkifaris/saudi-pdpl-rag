@@ -6,8 +6,8 @@ import numpy as np
 import torch
 from sentence_transformers import SentenceTransformer
 
-MODEL = "intfloat/multilingual-e5-small"
-OUT = Path("data/emb_e5small.npy")
+MODEL = "BAAI/bge-m3"
+OUT = Path("data/emb_bge-m3.npy")
 CORPUS = Path("data/corpus.jsonl")
 
 DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -19,11 +19,11 @@ def get_model(name: str = MODEL) -> SentenceTransformer:
 
 def passage(rec: dict) -> str:
     # e5 يشترط بادئة تميّز المستند عن السؤال
-    return f"passage: {rec['title']} — {rec['text']}"
+    return f"{rec['title']} — {rec['text']}"  # bge-m3 بلا بادئة
 
 
 def query(text: str) -> str:
-    return f"query: {text}"
+    return text  # bge-m3 بلا بادئة
 
 
 if __name__ == "__main__":

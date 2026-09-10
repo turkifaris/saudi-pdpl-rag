@@ -7,7 +7,7 @@ from embed import MODEL, get_model, query
 class DenseRetriever:
     name = "dense"
 
-    def __init__(self, records, emb_path="data/emb_e5small.npy",
+    def __init__(self, records, emb_path="data/emb_bge-m3.npy",
                  model_name=MODEL, use_prefix=True):
         self.records = records
         self.vecs = np.load(emb_path)

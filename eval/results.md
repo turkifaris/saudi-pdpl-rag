@@ -87,3 +87,33 @@ returns to 2/10 (dense alone: 0/10).
 Likely cause: 38 documents give BM25 too little to discriminate on, and the
 two systems are 0.15 apart in strength — far from the near-parity fusion
 assumes.
+
+## Embedding model shootout
+
+Same corpus, same 85 questions, same metrics. Only the model changes.
+
+| Model | dim | size | Hit@1 | Hit@5 | paraphrase | multi | nDCG | out-of-scope |
+|---|---|---|---|---|---|---|---|---|
+| multilingual-e5-small | 384 | 470MB | 0.68 | 0.88 | 0.76 | 0.90 | 0.79 | 0/10 |
+| **BAAI/bge-m3** | 1024 | 2.2GB | **0.80** | **0.93** | **0.88** | 1.00 | **0.86** | 0/10 |
+| Arabic-Triplet-Matryoshka-V2 | 768 | 541MB | 0.69 | 0.92 | 0.76 | 1.00 | 0.81 | 1/10 |
+| GATE-AraBert-v1 | 768 | 541MB | 0.71 | 0.93 | 0.76 | 1.00 | 0.81 | 1/10 |
+
+**Winner: bge-m3.**
+
+### The hypothesis was wrong
+The project assumed Arabic-specialised embeddings would beat general
+multilingual ones on Arabic legal text. They did not: both Arabic models
+trail bge-m3 by 0.12 on paraphrase Hit@5 and 0.09–0.11 on Hit@1.
+
+The Arabic-Triplet model card states the limitation directly — it "may not
+perform optimally on highly technical or domain-specific" content. Arabic
+regulatory prose is exactly that. Language specialisation is not domain
+specialisation, and bge-m3's far larger and more formal training corpus
+appears to outweigh it here.
+
+### Deployment tension (unresolved, week 5)
+GATE-AraBert-v1 matches bge-m3 on Hit@5 (0.93) at **a quarter of the size**
+(541MB vs 2.2GB), losing only on paraphrase and first-position ranking.
+Free-tier hosting is memory-constrained, so the production model may not be
+the benchmark winner.
