@@ -38,3 +38,10 @@ Extraction required solving four Arabic-specific problems: Unicode
 presentation forms, RTL block ordering, bidi-displaced punctuation, and
 intra-word spacing from PDF justification. Article detection improved
 from 32/38 to 38/38 as each was diagnosed and fixed.
+
+## Results
+| System | Hit@5 | nDCG@10 |
+|---|---|---|
+| BM25 baseline | 0.73 | 0.68 |
+
+Full breakdown by question type in `eval/results.md`.
