@@ -19,7 +19,7 @@ def get_model(name: str = MODEL) -> SentenceTransformer:
 
 def passage(rec: dict) -> str:
     # e5 يشترط بادئة تميّز المستند عن السؤال
-    return f"{rec['title']} — {rec['text']}"  # bge-m3 بلا بادئة
+    return rec["text"]  # بلا عنوان: مقتطع من النص نفسه فيكرره ويشوّه المتجه
 
 
 def query(text: str) -> str:

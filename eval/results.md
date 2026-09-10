@@ -117,3 +117,28 @@ GATE-AraBert-v1 matches bge-m3 on Hit@5 (0.93) at **a quarter of the size**
 (541MB vs 2.2GB), losing only on paraphrase and first-position ranking.
 Free-tier hosting is memory-constrained, so the production model may not be
 the benchmark winner.
+
+## Ablation: article title in the embedded text
+
+| Embedded text | Hit@1 | Hit@5 | paraphrase | nDCG@10 |
+|---|---|---|---|---|
+| title + text | 0.80 | 0.93 | 0.88 | 0.86 |
+| **text only** | 0.79 | **0.97** | **0.94** | **0.88** |
+
+**Removing the title improved retrieval.** Hit@5 +0.04, paraphrase +0.06.
+
+### How this was found
+Error analysis on the 5 remaining top-5 failures showed 3 of them targeting
+just two articles (21 and 22). Article 21 was one of the six whose extracted
+`title` was truncated mid-word at 60 characters — a limitation documented
+during corpus construction in week 1.
+
+### Why it hurt
+The `title` field is derived by slicing the first ~60 characters of the
+article body. Concatenating `title + text` therefore duplicates each
+article's opening twice, biasing the vector toward the first sentence and,
+for the six truncated cases, injecting a mid-word fragment as noise.
+
+The fix costs nothing and removes a component rather than adding one — the
+truncated-title limitation is now moot for retrieval, though `title` is
+still used for display in results.

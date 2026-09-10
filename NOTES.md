@@ -9,3 +9,6 @@
 - Drafting: ~30 AI-drafted then human-verified; rest human-authored. All gold labels human-assigned.
 - Limitation: direct/procedural phrasing is more formal than real users; paraphrase items (17) carry realistic phrasing.
 - TODO week 6: re-verify 4 eval items (personal-use phrasing, art 17 vs 36, المصلحة الحيوية scope, 2 borderline out_of_scope)
+- Title ablation (week 3 day 5): dropping the derived title from the embedded
+  text raised Hit@5 0.93 -> 0.97. Root cause traced to week-1 title heuristic
+  duplicating the article opening. Title retained for display only.
