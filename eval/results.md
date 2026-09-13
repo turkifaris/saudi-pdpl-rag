@@ -222,3 +222,37 @@ comparable to Hit@5 on a large collection.
 
 Both score near zero, so the rejection threshold suppresses them: the system
 abstains rather than answering wrongly.
+
+## Generation model comparison
+
+Identical retrieved contexts, identical system prompt, identical temperature
+(0.1). 30 questions (20 in-scope, 10 out-of-scope); only the model varies.
+
+| Model | cited | cited correctly | refusal | Arabic purity | avg chars | secs |
+|---|---|---|---|---|---|---|
+| qwen2.5:7b-instruct | 56% | 56% | 100% | **90%** | 95 | 102 |
+| **command-r7b-arabic** | **88%** | **88%** | 100% | 100% | 180 | 168 |
+| ALLaM-7B-Instruct-preview | 31% | 31% | 100% | 100% | 162 | 88 |
+
+**Winner: command-r7b-arabic.**
+
+### Findings
+1. **qwen2.5 language drift, quantified.** 90% Arabic purity means 1 in 10
+   answers contains Latin or CJK characters. This was observed anecdotally in
+   week 0 and is now measured. Both Arabic-tuned models score 100%.
+2. **ALLaM's failure is instruction-following, not knowledge.** Its citation
+   rate equals its citation accuracy (31% = 31%): when it cites, it is always
+   right — it simply omits the citation in 69% of answers.
+3. **All three refused 100% of out-of-scope questions.** A well-constrained
+   prompt compensates for model weakness on compliance tasks.
+
+### Caveats
+- One prompt for all three. Fair in holding the variable constant, but each
+  model may respond better to a different instruction style; ALLaM was not
+  prompt-tuned.
+- `ALLaM-7B-Instruct-preview` is a preview release, not the final model.
+- n = 20 answered questions per model. The 88% vs 31% gap is large, but the
+  sample is small.
+
+The honest claim is: *under an identical prompt, ALLaM-preview omitted the
+required citation in 69% of answers* — not that the model is weak.

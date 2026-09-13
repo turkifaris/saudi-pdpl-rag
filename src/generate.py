@@ -9,7 +9,7 @@ from rerank import RerankRetriever
 from retrieve import load
 
 OLLAMA = "http://localhost:11434/api/chat"
-MODEL = "qwen2.5:7b-instruct"
+MODEL = "command-r7b-arabic"
 TOP_K = 3
 
 SYSTEM = """أنت مساعد يجيب على الأسئلة من اللائحة التنفيذية لنظام حماية البيانات الشخصية السعودي.
