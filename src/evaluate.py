@@ -24,6 +24,9 @@ def build(name, recs):
     if name == "hybrid":
         from hybrid import HybridRetriever
         return HybridRetriever(recs)
+    if name == "rerank":
+        from rerank import RerankRetriever
+        return RerankRetriever(recs)
     raise SystemExit(f"نظام غير معروف: {name}")
 
 

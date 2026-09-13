@@ -142,3 +142,35 @@ for the six truncated cases, injecting a mid-word fragment as noise.
 The fix costs nothing and removes a component rather than adding one — the
 truncated-title limitation is now moot for retrieval, though `title` is
 still used for display in results.
+
+## Cross-encoder reranking
+
+Two-stage: bge-m3 retrieves top-20, BAAI/bge-reranker-v2-m3 reorders to top-5.
+
+| Metric | dense only | + reranker | Δ |
+|---|---|---|---|
+| Hit@1 | 0.79 | **0.88** | +0.09 |
+| Hit@5 | 0.97 | 0.97 | 0.00 |
+| MRR | 0.86 | **0.92** | +0.06 |
+| nDCG@10 | 0.88 | **0.93** | +0.05 |
+| paraphrase Hit@1 | 0.65 | **0.76** | +0.11 |
+
+Hit@5 is unchanged by construction — a reranker reorders candidates, it
+cannot retrieve new ones. Its entire contribution is ordering.
+
+### Unplanned benefit: calibrated scores
+| | in-scope median | out-of-scope median | gap |
+|---|---|---|---|
+| dense (cosine) | 0.64 | 0.55 | 0.09 |
+| reranker | 0.81 | **0.05** | **0.76** |
+
+Cosine similarity between any two Arabic texts compresses into a narrow
+band, making a rejection threshold fragile. The cross-encoder is trained to
+score relevance directly, so its output separates in-scope from
+out-of-scope by 8x the margin. The reranker was added to fix ranking; it
+also made the week-4 rejection threshold tractable.
+
+### Cost
+Reranking runs a full forward pass per (query, candidate) pair at query
+time — nothing can be precomputed. Latency measured separately; this is the
+main deployment trade-off for week 5.
