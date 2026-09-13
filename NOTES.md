@@ -20,3 +20,52 @@
   «حساب» does not exist anywhere in the Regulations — a vocabulary gap wider
   than synonymy. Candidate v2 fix: query rewriting (colloquial -> legal register)
   before retrieval.
+
+## Week 4 — decisions and rejected paths
+
+- Two "false refusal" metrics exist in this project and must not be conflated:
+  1. **Retrieval-layer** (week 3): the score threshold suppresses a question whose gold
+     article was retrievable. Measured 6/68. The «حساب» example above is this kind.
+  2. **Generation-layer** (week 4): the model answers «لا تتضمن» although the gold
+     article was in its context. Measured **0/20**.
+  Different causes, different fixes. Always state which one a figure refers to.
+
+- **Generation model: `command-r7b-arabic` selected.** Identical contexts, identical
+  system prompt, identical temperature (0.1) — only the model varied. 93% citation,
+  93% citation accuracy, 100% Arabic purity, 100% out-of-scope refusal. qwen2.5:7b
+  reaches 90% Arabic purity, i.e. 1 answer in 10 leaks Latin or CJK characters —
+  disqualifying for an Arabic legal assistant regardless of its other scores.
+  **Licence is non-commercial (CC-BY-NC).** Must be stated in the README; a commercial
+  deployment would need a different generator.
+
+- **Rejected: hybrid BM25 + dense with RRF.** Hit@5 0.85 vs 0.93 for dense alone. RRF
+  ranks by position, not by score, so it discarded the magnitude the rejection
+  threshold depends on — the confidence signal collapsed. Weighted fusion
+  (w_bm25=0.3) did not recover it. Kept as a documented negative result: the standard
+  recipe lost to the simpler component on this corpus.
+
+- **Rejected: Arabic-specialised embeddings.** gate-arabert scored 0.76 on paraphrase
+  questions vs 0.88 for multilingual bge-m3. "Arabic-specialised" did not imply better
+  on Arabic here. It remains the deployment fallback: 541MB vs 2.2GB at equal Hit@5.
+
+- **Largest single retrieval gain came from removing a component**, not adding one:
+  dropping the derived title from the embedded text (week 3 day 5). The title heuristic
+  was already flagged as a limitation in week 1; the limitation log paid for itself.
+
+- **Measurement bug: the citation detector.** Matched `المادة\s+` only, missing every
+  clitic-prefixed citation (للمادة / بالمادة / والمادة). Depressed every reported
+  citation rate by 5–12 points for two weeks. Found by manual review, not by a test.
+  Fixed in `src/rescore.py` + `src/fix_verdicts.py`; rankings unchanged.
+  **Rule adopted: the evaluation harness needs its own evaluation.**
+
+- **Annotation error: criterion drift.** During manual review, verdict 5 ("false
+  refusal") was pressed whenever the ⚠️ *no citation* flag appeared, rather than when
+  the stated rule held. 6 of 20 verdicts were affected. Two root causes: (a) the tool
+  renders two different warnings with the same symbol; (b) a detector signal was being
+  read as a verdict. Corrected by rule, not by memory, each change carrying a `note`.
+  **Week 5 fix: distinct colours for "low confidence" and "no citation" in the UI.**
+
+- **Reranker cost, unresolved for week 5.** bge-reranker-v2-m3 adds 2.2GB and ~2.8s per
+  query on MPS, 10–30s on CPU. Free hosting is CPU-only and memory-constrained.
+  Open decision: ship dense-only (0.91 Hit@1, fast) or dense+rerank (higher accuracy,
+  unusable latency on free tier).
