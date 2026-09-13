@@ -1,0 +1,597 @@
+[
+ {
+  "id": "q001",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.8646280765533447,
+  "correct": true
+ },
+ {
+  "id": "q002",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.7193928956985474,
+  "correct": true
+ },
+ {
+  "id": "q003",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.7209534645080566,
+  "correct": true
+ },
+ {
+  "id": "q004",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.9499615430831909,
+  "correct": true
+ },
+ {
+  "id": "q005",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9925772547721863,
+  "correct": true
+ },
+ {
+  "id": "q006",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.8158233165740967,
+  "correct": true
+ },
+ {
+  "id": "q007",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9931069016456604,
+  "correct": true
+ },
+ {
+  "id": "q008",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9744631052017212,
+  "correct": true
+ },
+ {
+  "id": "q009",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.04147959500551224,
+  "correct": true
+ },
+ {
+  "id": "q010",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.1908542364835739,
+  "correct": true
+ },
+ {
+  "id": "q011",
+  "type": "multi",
+  "in_scope": true,
+  "score": 0.8800582885742188,
+  "correct": true
+ },
+ {
+  "id": "q012",
+  "type": "out_of_scope",
+  "in_scope": false,
+  "score": 0.0009404069860465825,
+  "correct": false
+ },
+ {
+  "id": "q013",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.29593029618263245,
+  "correct": true
+ },
+ {
+  "id": "q014",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.7591124773025513,
+  "correct": true
+ },
+ {
+  "id": "q015",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.9743538498878479,
+  "correct": true
+ },
+ {
+  "id": "q016",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.5800363421440125,
+  "correct": true
+ },
+ {
+  "id": "q017",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.8460263013839722,
+  "correct": true
+ },
+ {
+  "id": "q018",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.9058284163475037,
+  "correct": true
+ },
+ {
+  "id": "q019",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.64381343126297,
+  "correct": true
+ },
+ {
+  "id": "q020",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.9988605976104736,
+  "correct": true
+ },
+ {
+  "id": "q021",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.04179174825549126,
+  "correct": false
+ },
+ {
+  "id": "q022",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.4329081177711487,
+  "correct": true
+ },
+ {
+  "id": "q023",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.7916654944419861,
+  "correct": true
+ },
+ {
+  "id": "q024",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.8889249563217163,
+  "correct": true
+ },
+ {
+  "id": "q025",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.011923731304705143,
+  "correct": true
+ },
+ {
+  "id": "q026",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.8222627639770508,
+  "correct": true
+ },
+ {
+  "id": "q027",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.008934441022574902,
+  "correct": false
+ },
+ {
+  "id": "q028",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.012367669492959976,
+  "correct": true
+ },
+ {
+  "id": "q029",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.14881306886672974,
+  "correct": true
+ },
+ {
+  "id": "q030",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.034748729318380356,
+  "correct": false
+ },
+ {
+  "id": "q031",
+  "type": "multi",
+  "in_scope": true,
+  "score": 0.08716567605733871,
+  "correct": true
+ },
+ {
+  "id": "q032",
+  "type": "out_of_scope",
+  "in_scope": false,
+  "score": 0.028683966025710106,
+  "correct": false
+ },
+ {
+  "id": "q033",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.808486819267273,
+  "correct": true
+ },
+ {
+  "id": "q034",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.4969619810581207,
+  "correct": true
+ },
+ {
+  "id": "q035",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.2305174320936203,
+  "correct": true
+ },
+ {
+  "id": "q036",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.9465922713279724,
+  "correct": true
+ },
+ {
+  "id": "q037",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.005495449528098106,
+  "correct": false
+ },
+ {
+  "id": "q038",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.36782777309417725,
+  "correct": true
+ },
+ {
+  "id": "q039",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.005303169600665569,
+  "correct": true
+ },
+ {
+  "id": "q040",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.8506325483322144,
+  "correct": true
+ },
+ {
+  "id": "q041",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.1306171715259552,
+  "correct": true
+ },
+ {
+  "id": "q042",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.2904159426689148,
+  "correct": true
+ },
+ {
+  "id": "q043",
+  "type": "paraphrase",
+  "in_scope": true,
+  "score": 0.8517158031463623,
+  "correct": true
+ },
+ {
+  "id": "q044",
+  "type": "out_of_scope",
+  "in_scope": false,
+  "score": 0.022316034883260727,
+  "correct": false
+ },
+ {
+  "id": "q045",
+  "type": "out_of_scope",
+  "in_scope": false,
+  "score": 0.06310141086578369,
+  "correct": false
+ },
+ {
+  "id": "q046",
+  "type": "out_of_scope",
+  "in_scope": false,
+  "score": 0.09110219031572342,
+  "correct": false
+ },
+ {
+  "id": "q047",
+  "type": "out_of_scope",
+  "in_scope": false,
+  "score": 0.08710664510726929,
+  "correct": false
+ },
+ {
+  "id": "q048",
+  "type": "out_of_scope",
+  "in_scope": false,
+  "score": 0.001262037898413837,
+  "correct": false
+ },
+ {
+  "id": "q049",
+  "type": "out_of_scope",
+  "in_scope": false,
+  "score": 0.12224547564983368,
+  "correct": false
+ },
+ {
+  "id": "q050",
+  "type": "out_of_scope",
+  "in_scope": false,
+  "score": 0.49099481105804443,
+  "correct": false
+ },
+ {
+  "id": "q051",
+  "type": "out_of_scope",
+  "in_scope": false,
+  "score": 0.0381077341735363,
+  "correct": false
+ },
+ {
+  "id": "q052",
+  "type": "multi",
+  "in_scope": true,
+  "score": 0.47571295499801636,
+  "correct": true
+ },
+ {
+  "id": "q053",
+  "type": "multi",
+  "in_scope": true,
+  "score": 0.10735578089952469,
+  "correct": true
+ },
+ {
+  "id": "q054",
+  "type": "multi",
+  "in_scope": true,
+  "score": 0.6900649666786194,
+  "correct": true
+ },
+ {
+  "id": "q055",
+  "type": "multi",
+  "in_scope": true,
+  "score": 0.9583225250244141,
+  "correct": true
+ },
+ {
+  "id": "q056",
+  "type": "multi",
+  "in_scope": true,
+  "score": 0.5474616885185242,
+  "correct": true
+ },
+ {
+  "id": "q057",
+  "type": "multi",
+  "in_scope": true,
+  "score": 0.3693419098854065,
+  "correct": true
+ },
+ {
+  "id": "q058",
+  "type": "multi",
+  "in_scope": true,
+  "score": 0.4843255579471588,
+  "correct": true
+ },
+ {
+  "id": "q059",
+  "type": "multi",
+  "in_scope": true,
+  "score": 0.0920214056968689,
+  "correct": true
+ },
+ {
+  "id": "q060",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.9741254448890686,
+  "correct": true
+ },
+ {
+  "id": "q061",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.8727269768714905,
+  "correct": true
+ },
+ {
+  "id": "q062",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.8085622191429138,
+  "correct": true
+ },
+ {
+  "id": "q063",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.8462579250335693,
+  "correct": true
+ },
+ {
+  "id": "q064",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.9539908170700073,
+  "correct": true
+ },
+ {
+  "id": "q065",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.9418006539344788,
+  "correct": true
+ },
+ {
+  "id": "q066",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.9879376292228699,
+  "correct": true
+ },
+ {
+  "id": "q067",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.9975529313087463,
+  "correct": true
+ },
+ {
+  "id": "q068",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9987657070159912,
+  "correct": true
+ },
+ {
+  "id": "q069",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9732171297073364,
+  "correct": true
+ },
+ {
+  "id": "q070",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9980084300041199,
+  "correct": true
+ },
+ {
+  "id": "q071",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9835541248321533,
+  "correct": true
+ },
+ {
+  "id": "q072",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9780354499816895,
+  "correct": false
+ },
+ {
+  "id": "q073",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9844122529029846,
+  "correct": true
+ },
+ {
+  "id": "q074",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9985412359237671,
+  "correct": true
+ },
+ {
+  "id": "q075",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9804238080978394,
+  "correct": true
+ },
+ {
+  "id": "q076",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.8567577004432678,
+  "correct": true
+ },
+ {
+  "id": "q077",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.14161181449890137,
+  "correct": true
+ },
+ {
+  "id": "q078",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.8248451948165894,
+  "correct": true
+ },
+ {
+  "id": "q079",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.1507495939731598,
+  "correct": false
+ },
+ {
+  "id": "q080",
+  "type": "direct",
+  "in_scope": true,
+  "score": 0.006665046792477369,
+  "correct": true
+ },
+ {
+  "id": "q081",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.05204586684703827,
+  "correct": false
+ },
+ {
+  "id": "q082",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.8344603776931763,
+  "correct": true
+ },
+ {
+  "id": "q083",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.022569183260202408,
+  "correct": true
+ },
+ {
+  "id": "q084",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.265519917011261,
+  "correct": true
+ },
+ {
+  "id": "q085",
+  "type": "procedural",
+  "in_scope": true,
+  "score": 0.9194052219390869,
+  "correct": true
+ }
+]

@@ -12,3 +12,11 @@
 - Title ablation (week 3 day 5): dropping the derived title from the embedded
   text raised Hit@5 0.93 -> 0.97. Root cause traced to week-1 title heuristic
   duplicating the article opening. Title retained for display only.
+- Generation layer live. Example of correct behaviour: "كم مدة الإشعار عن
+  تسرب البيانات؟" -> 0.983 -> cites المادة 24, states 72 hours, ignores the
+  two irrelevant articles also passed in context.
+- Example of a false refusal (one of the measured 6/68): "أبي أمسح حسابي وكل
+  شي عني" -> 0.009 -> refused, though Art. 8 answers it. Root cause: the word
+  «حساب» does not exist anywhere in the Regulations — a vocabulary gap wider
+  than synonymy. Candidate v2 fix: query rewriting (colloquial -> legal register)
+  before retrieval.
