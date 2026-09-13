@@ -1,0 +1,122 @@
+[
+ {
+  "id": "q068",
+  "type": "procedural",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q082",
+  "type": "procedural",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q070",
+  "type": "procedural",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q085",
+  "type": "procedural",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q076",
+  "type": "direct",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q026",
+  "type": "procedural",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q071",
+  "type": "procedural",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q079",
+  "type": "direct",
+  "verdict": "1",
+  "note": "رفض والذهبية [] لم تعرض - خلل استرجاع"
+ },
+ {
+  "id": "q014",
+  "type": "direct",
+  "verdict": "1",
+  "note": "استشهد بسابقة - خطأ كاشف"
+ },
+ {
+  "id": "q084",
+  "type": "procedural",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q010",
+  "type": "paraphrase",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q006",
+  "type": "procedural",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q062",
+  "type": "direct",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q067",
+  "type": "direct",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q055",
+  "type": "multi",
+  "verdict": "2",
+  "note": ""
+ },
+ {
+  "id": "q043",
+  "type": "paraphrase",
+  "verdict": "1",
+  "note": ""
+ },
+ {
+  "id": "q046",
+  "type": "out_of_scope",
+  "verdict": "1",
+  "note": "خارج النطاق - الرفض صحيح"
+ },
+ {
+  "id": "q047",
+  "type": "out_of_scope",
+  "verdict": "1",
+  "note": "خارج النطاق - الرفض صحيح"
+ },
+ {
+  "id": "q049",
+  "type": "out_of_scope",
+  "verdict": "1",
+  "note": "خارج النطاق - الرفض صحيح"
+ },
+ {
+  "id": "q050",
+  "type": "out_of_scope",
+  "verdict": "1",
+  "note": "خارج النطاق - الرفض صحيح"
+ }
+]

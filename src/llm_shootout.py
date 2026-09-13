@@ -19,8 +19,8 @@ REFUSAL_MARK = "لا تتضمن المواد المعطاة"
 ARABIC = re.compile(r"[\u0600-\u06FF]")
 LATIN_CJK = re.compile(r"[A-Za-z\u4e00-\u9fff]")
 ORD_ALT = "|".join(re.escape(k) for k in sorted(ORD, key=len, reverse=True))
-CITE_NUM = re.compile(r"المادة\s*\(?\s*(\d+)")
-CITE_ORD = re.compile(r"المادة\s+(" + ORD_ALT + ")")
+CITE_NUM = re.compile(r"[اوفبكل]{0,3}مادة\s*\(?\s*(\d+)")
+CITE_ORD = re.compile(r"[اوفبكل]{0,3}مادة\s+(" + ORD_ALT + ")")
 
 rows = json.loads(Path("eval/contexts.json").read_text(encoding="utf-8"))
 
