@@ -174,3 +174,18 @@ also made the week-4 rejection threshold tractable.
 Reranking runs a full forward pass per (query, candidate) pair at query
 time — nothing can be precomputed. Latency measured separately; this is the
 main deployment trade-off for week 5.
+
+### Latency (85 questions, M5 Air, MPS)
+| System | total | per query |
+|---|---|---|
+| dense only | 12.0s | ~0.07s |
+| + reranker | 249.5s | ~2.8s |
+
+~40x slower per query. The reranker runs 20 full forward passes of a 2.2GB
+cross-encoder per question (1,700 total); nothing can be precomputed because
+the query is half of every input. CPU utilisation reads 4% because the work
+is on the GPU — wall-clock is the only meaningful measure here.
+
+On CPU-only free hosting this becomes 10-30s per query. Week-5 options:
+drop the reranker (-0.09 Hit@1), shrink `pool` from 20 to 5, or use a
+smaller cross-encoder.
