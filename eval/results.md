@@ -189,3 +189,36 @@ is on the GPU — wall-clock is the only meaningful measure here.
 On CPU-only free hosting this becomes 10-30s per query. Week-5 options:
 drop the reranker (-0.09 Hit@1), shrink `pool` from 20 to 5, or use a
 smaller cross-encoder.
+
+## After label corrections
+
+Two incomplete gold labels were corrected (see `label_fixes.md`). The system
+was not modified — only the measurement.
+
+| Metric | before | after | Δ |
+|---|---|---|---|
+| Hit@1 | 0.88 | **0.91** | +0.03 |
+| Hit@5 | 0.97 | **1.00** | +0.03 |
+| nDCG@10 | 0.93 | 0.94 | +0.01 |
+| paraphrase Hit@1 | 0.76 | 0.82 | +0.06 |
+
+Both figures are reported; the gain is measurement accuracy, not system
+improvement.
+
+### Reading Hit@5 = 1.00 honestly
+The corpus is 38 articles, so returning the top 5 exposes **13% of the entire
+corpus** per query. Random selection alone scores 0.13 at k=5. A perfect
+Hit@5 on a corpus this small is expected of a strong retriever and is not
+comparable to Hit@5 on a large collection.
+
+**Hit@1 = 0.91 is the meaningful figure** — one correct article out of 38
+(2.6% by chance).
+
+### Remaining failures at k=1
+| Question | Cause |
+|---|---|
+| q027 | Art. 22 not surfaced (top-1 score 0.009) |
+| q037 | Art. 12 not surfaced (top-1 score 0.005) |
+
+Both score near zero, so the rejection threshold suppresses them: the system
+abstains rather than answering wrongly.
