@@ -228,6 +228,10 @@ abstains rather than answering wrongly.
 Identical retrieved contexts, identical system prompt, identical temperature
 (0.1). 30 questions (20 in-scope, 10 out-of-scope); only the model varies.
 
+> **Superseded.** The citation figures in the table below were produced by a broken
+> detector. See *Citation-detector correction* at the end of this file for the
+> corrected numbers. The ranking is unchanged.
+
 | Model | cited | cited correctly | refusal | Arabic purity | avg chars | secs |
 |---|---|---|---|---|---|---|
 | qwen2.5:7b-instruct | 56% | 56% | 100% | **90%** | 95 | 102 |
@@ -256,3 +260,47 @@ Identical retrieved contexts, identical system prompt, identical temperature
 
 The honest claim is: *under an identical prompt, ALLaM-preview omitted the
 required citation in 69% of answers* — not that the model is weak.
+
+
+## Citation-detector correction (week 4, day 6)
+
+The citation detector matched `المادة\s+` only, so it missed every citation carrying
+an Arabic clitic prefix — **للمادة**, **بالمادة**, **والمادة**. Every citation rate
+reported above is therefore an undercount. Fixed to `[اوفبكل]{0,3}مادة` and all three
+models were rescored from the cached answers, with no regeneration (`src/rescore.py`).
+
+| Model | cited (old) | **cited (corrected)** | cited correctly |
+|---|---|---|---|
+| **command-r7b-arabic** | 88% | **93%** (15/16) | **93%** (15/16) |
+| qwen2.5:7b-instruct | 56% | **68%** (11/16) | **68%** (11/16) |
+| ALLaM-7B-Instruct-preview | 31% | **43%** (7/16) | **43%** (7/16) |
+
+**The ranking did not change.** command-r7b-arabic wins before and after the fix, so
+the correction improves measurement accuracy without altering the selection decision.
+
+### Zero incorrect citations
+`cited` and `cited correctly` are **identical for all three models**. Every article
+number any model produced was the right one; none was invented. The failure mode is
+omission, never fabrication — the property that matters most for a legal assistant.
+
+This also generalises finding 2 above: what was read as an ALLaM-specific trait
+(citation rate = citation accuracy) holds for every model tested.
+
+### How the error was found
+Manual faithfulness review (`eval/faithfulness.md`). A `command-r7b-arabic` answer to
+q014 cited «(للمادة الثانية)» — correct — yet was flagged *no citation*. The detector,
+not the model, was wrong. Six manual verdicts derived from that flag were corrected in
+`src/fix_verdicts.py`, each with a stored `note`.
+
+**Lesson recorded:** the evaluation harness needs evaluating too. A silent measurement
+bug had been depressing a headline metric by 5–12 points for two weeks.
+
+### Note on n
+The answer cache holds 20 questions per model: **16 in-scope + 4 out-of-scope**.
+Citation rates are computed over the 16 in-scope questions only, because an
+out-of-scope question has no gold article to cite. Every id in the cache resolves in
+`eval_set.json` — nothing is missing. The "n = 20 answered questions" wording in the
+older table counted all cached questions, including the four correct refusals.
+
+This was verified rather than assumed: the 20/16 gap looked like a cache mismatch and
+was checked before publishing the figure.
