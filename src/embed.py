@@ -1,5 +1,6 @@
 """Encode the corpus into dense vectors and cache them to disk."""
 import json
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -13,6 +14,7 @@ CORPUS = Path("data/corpus.jsonl")
 DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
 
 
+@lru_cache(maxsize=2)
 def get_model(name: str = MODEL) -> SentenceTransformer:
     return SentenceTransformer(name, device=DEVICE)
 

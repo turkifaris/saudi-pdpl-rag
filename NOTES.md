@@ -86,3 +86,19 @@
 - **100% out-of-scope blocking is not achievable on the colloquial set** (max 7/8), and
   not because the threshold is wrong — the single leak scores 0.931. Documented rather
   than tuned away.
+
+- **Rejected: orthographic folding of query and corpus** (week 5, day 2). Free-spelling
+  questions ("الموافقه", "معالجه") do not match the corpus spelling, so a folded index
+  was built (ة→ه, أ/إ/آ→ا, ى→ي, diacritics stripped) and wired as a cheap middle rung of
+  the cascade, before the expensive LLM rewrite. **Measured and rejected**: none of the
+  three failing questions crossed the 0.70 threshold (best gain +0.003), and two got
+  materially worse (−0.113, −0.324). bge-m3 already normalises these variants in its own
+  tokenizer — it was trained on unnormalised web Arabic — so folding adds nothing, and
+  folding the *corpus* moves it away from the distribution the model was trained on.
+  This re-confirms by measurement the rule adopted in week 2 from reasoning alone:
+  **normalise for the lexical index only, never for dense models.**
+  The experiment is kept and is reproducible: `src/arabic.py`, `src/fold_retrieve.py`,
+  `python src/probe_fold.py`. Not wired into `generate.py`.
+
+- **Kept from that work:** `get_model()` is now `@lru_cache`d, so building a second
+  retriever no longer loads a second 2.2GB copy of the embedding model.
