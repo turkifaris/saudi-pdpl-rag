@@ -1,0 +1,30 @@
+# Third-party content and models
+
+The MIT licence in LICENSE covers the code in this repository only.
+The following are not covered and carry their own terms.
+
+## Corpus
+
+The Executive Regulations of the Saudi Personal Data Protection Law are an
+official publication of SDAIA. They are reproduced here in extracted form for
+research purposes. The source document itself is not redistributed
+(data/raw/ is untracked); data/raw/SOURCES.md records its origin and the date
+it was retrieved. The official published text is the only authoritative
+reference.
+
+## Models
+
+| Model | Role | Licence |
+|---|---|---|
+| BAAI/bge-m3 | embeddings | MIT |
+| BAAI/bge-reranker-v2-m3 | reranking | Apache 2.0 |
+| command-r7b-arabic | generation | CC-BY-NC 4.0 (non-commercial) |
+
+command-r7b-arabic is used here for a research and portfolio project.
+A commercial deployment would require substituting a differently-licensed
+generator; the retrieval stack is unaffected.
+
+## Disclaimer
+
+This project is not legal advice and is not affiliated with SDAIA or any
+Saudi government entity.
