@@ -1,0 +1,167 @@
+{
+ "c001": {
+  "id": "c001",
+  "question": "الموافقه على معالجه البيانات كيف تكون ؟",
+  "type": "colloquial",
+  "gold_articles": [
+   11
+  ]
+ },
+ "c002": {
+  "id": "c002",
+  "question": "هل لازم يوفرون وسائل للتواصل ؟",
+  "type": "colloquial",
+  "gold_articles": [
+   10
+  ]
+ },
+ "c003": {
+  "id": "c003",
+  "question": "متى يفصح عن بياناتي ؟",
+  "type": "colloquial",
+  "gold_articles": [
+   20
+  ]
+ },
+ "c004": {
+  "id": "c004",
+  "question": "كيف يتم تصحيح بياناتي ؟",
+  "type": "colloquial",
+  "gold_articles": [
+   22,
+   7
+  ]
+ },
+ "c005": {
+  "id": "c005",
+  "question": "متى يقولون لي عن تسرب البيانات ؟",
+  "type": "colloquial",
+  "gold_articles": [
+   24
+  ]
+ },
+ "c006": {
+  "id": "c006",
+  "question": "اذا جمعو معلومات عشان امور بحثيه ما وافقت وش اسوي ؟",
+  "type": "colloquial",
+  "gold_articles": [
+   11,
+   30,
+   4
+  ]
+ },
+ "c007": {
+  "id": "c007",
+  "question": "هل تقويم الاثر الزامي",
+  "type": "colloquial",
+  "gold_articles": [
+   25
+  ]
+ },
+ "c008": {
+  "id": "c008",
+  "question": "ماهي الامور الي يحصد فيها الاثر",
+  "type": "colloquial",
+  "gold_articles": [
+   25
+  ]
+ },
+ "c009": {
+  "id": "c009",
+  "question": "وش الي لازم تكون داخل تقويم الاثر",
+  "type": "colloquial",
+  "gold_articles": [
+   25
+  ]
+ },
+ "c010": {
+  "id": "c010",
+  "question": "اذا ابي اسوي تسويق وش الي التزم فيه",
+  "type": "colloquial",
+  "gold_articles": [
+   29,
+   28
+  ]
+ },
+ "c011": {
+  "id": "c011",
+  "question": "كم فتره الاحتفاظ بسجلات الانشطه",
+  "type": "colloquial",
+  "gold_articles": [
+   33
+  ]
+ },
+ "c012": {
+  "id": "c012",
+  "question": "وش لازم يكون محتى سجل الانشطه",
+  "type": "colloquial",
+  "gold_articles": [
+   33
+  ]
+ },
+ "c013": {
+  "id": "c013",
+  "question": "وش شرط اختيار جهه المهالجه",
+  "type": "colloquial",
+  "gold_articles": [
+   17
+  ]
+ },
+ "c014": {
+  "id": "c014",
+  "question": "وش الاتفاق مع الي بتعالج بياناتي الجهه",
+  "type": "colloquial",
+  "gold_articles": [
+   17,
+   11
+  ]
+ },
+ "c015": {
+  "id": "c015",
+  "question": "هل استطيع نقل البيانات خارج المملكة",
+  "type": "out_of_scope",
+  "gold_articles": []
+ },
+ "c016": {
+  "id": "c016",
+  "question": "كم سنه يتم الاحتفاظ ببياناتي",
+  "type": "out_of_scope",
+  "gold_articles": []
+ },
+ "c017": {
+  "id": "c017",
+  "question": "كم عقوبه الي سرب بيانات متعمد ؟",
+  "type": "out_of_scope",
+  "gold_articles": []
+ },
+ "c018": {
+  "id": "c018",
+  "question": "وش يسمى التجسس في هذي القواعد حقت البينات؟",
+  "type": "out_of_scope",
+  "gold_articles": []
+ },
+ "c019": {
+  "id": "c019",
+  "question": "و تقول الماده 40 ؟",
+  "type": "out_of_scope",
+  "gold_articles": []
+ },
+ "c020": {
+  "id": "c020",
+  "question": "وش اسوي اذا ماقدرت انقل بياناتي",
+  "type": "out_of_scope",
+  "gold_articles": []
+ },
+ "c021": {
+  "id": "c021",
+  "question": "الحين البيانات تنتهك بسرعه",
+  "type": "out_of_scope",
+  "gold_articles": []
+ },
+ "c022": {
+  "id": "c022",
+  "question": "كم مجموعه الغرامات ؟",
+  "type": "out_of_scope",
+  "gold_articles": []
+ }
+}

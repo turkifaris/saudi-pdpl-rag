@@ -304,3 +304,49 @@ older table counted all cached questions, including the four correct refusals.
 
 This was verified rather than assumed: the 20/16 gap looked like a cache mismatch and
 was checked before publishing the figure.
+
+## Colloquial evaluation set (week 5, day 2)
+
+A second evaluation set was built from questions written by a native Saudi speaker as a
+real user would type them: no legal vocabulary, free spelling, short and often
+ungrammatical. 22 questions — **14 in-scope + 8 out-of-scope** — gold-labelled by
+reviewing the top-8 retrieved articles rather than from memory (`eval/colloquial.json`).
+
+Two questions initially marked in-scope turned out to have **no answering article** and
+were reclassified: cross-border transfer (governed by a separate regulation, not these
+Executive Regulations) and a fixed retention period in years (the Regulations tie
+destruction to purpose, not to a fixed term).
+
+| System | coverage | precision | out-of-scope blocked | answered & correct |
+|---|---|---|---|---|
+| Original (no rewriting, threshold 0.08) | 79% | 100% | **62%** | 79% |
+| No rewriting, threshold 0.70 | **21%** | 100% | 100% | 21% |
+| **Cascade, threshold 0.70** | **79%** | 91% | **88%** | **71%** |
+
+The original configuration answers 3 of 8 out-of-scope questions — disqualifying for a
+legal assistant. Raising the threshold without rewriting blocks everything but refuses
+11 of 14 legitimate questions. Only the cascade holds both.
+
+### Threshold is not sensitive
+Coverage, precision and blocking are **flat across 0.65–0.80** (79% / 91% / 88%). The
+shipped value of 0.70 sits mid-plateau, so the system does not depend on fine tuning.
+Dropping to 0.60 buys 8 points of yield for 13 points of blocking — the wrong trade here.
+
+### The one leak, and why no threshold fixes it
+"كم سنه يتم الاحتفاظ ببياناتي" (out-of-scope: no article sets a retention period in
+years) scores 0.577 raw but **0.931 after rewriting**. The rewrite phrases it in the
+Regulations' own vocabulary, which strongly matches Article 33 — retention of the
+*processing activity record*, not of the data subject's data. The retrieval is not
+unreasonable; the reranker simply measures **vocabulary overlap, not answerability**,
+which is the same root cause diagnosed at the start of this work. Blocking it would
+require a threshold above 0.931, which destroys coverage. **Max achievable blocking on
+this set is 88% (7/8).** The architectural fix is a separate answerability check on the
+retrieved article — deferred to v2.
+
+### New failure mode: broken spelling of the key term
+Two of the three in-scope failures share a cause — the word carrying the meaning is
+misspelled ("يحصد" for يُحصر, "محتى" for محتوى). Rewriting cannot recover a term it
+cannot read, and in one case made the score worse (0.446 → 0.238). This is distinct from
+the register gap: not *how* the question is phrased, but that the key token is corrupted.
+Candidate v2 fix: character-level fuzzy matching against a domain vocabulary before
+rewriting.

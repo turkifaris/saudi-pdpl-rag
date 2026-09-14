@@ -77,3 +77,12 @@
   query needs a direct-lookup route, not semantic search. A route was designed
   (regex → article id → fetch, bypassing retrieval) and **deliberately not shipped** in
   v1 to keep the scope on semantic Q&A. Candidate for v2.
+
+- **Two evaluation sets, measuring different things.** `eval_set.json` (85 questions,
+  written while reading the Regulations) measures retrieval quality. `colloquial.json`
+  (22 questions, written as a real user types) measures whether the system is *usable*.
+  The second was built only in week 5, after using the UI exposed failures no metric had
+  caught. Every finding of week 5 day 2 came from it, not from the 85.
+- **100% out-of-scope blocking is not achievable on the colloquial set** (max 7/8), and
+  not because the threshold is wrong — the single leak scores 0.931. Documented rather
+  than tuned away.
