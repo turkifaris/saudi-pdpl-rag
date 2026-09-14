@@ -1,7 +1,7 @@
 import sys, time, pathlib
 import streamlit as st
-
-sys.path.insert(0, str(pathlib.Path(__file__).parent / "src"))
+_SRC = pathlib.Path(__file__).resolve().parent / "src"
+sys.path[:0] = [str(_SRC)] + [str(d) for d in _SRC.iterdir() if d.is_dir()]
 from generate import answer, load, RerankRetriever
 
 st.set_page_config(page_title="مستشار الأنظمة السعودية", page_icon="⚖️", layout="centered")
