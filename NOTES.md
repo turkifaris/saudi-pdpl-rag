@@ -69,3 +69,11 @@
   query on MPS, 10–30s on CPU. Free hosting is CPU-only and memory-constrained.
   Open decision: ship dense-only (0.91 Hit@1, fast) or dense+rerank (higher accuracy,
   unusable latency on free tier).
+
+- **Lookup-by-article-number is out of scope (deliberate).** "ما هي المادة ٦؟" fails:
+  the corpus spells article numbers as Arabic ordinals ("السادسة"), and the question
+  carries no semantic content for the reranker to match, so it scores near zero and is
+  refused. Diagnosed as a *query-type* mismatch, not a retrieval failure — a navigational
+  query needs a direct-lookup route, not semantic search. A route was designed
+  (regex → article id → fetch, bypassing retrieval) and **deliberately not shipped** in
+  v1 to keep the scope on semantic Q&A. Candidate for v2.

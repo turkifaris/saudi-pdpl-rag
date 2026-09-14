@@ -1,14 +1,22 @@
-"""Show the exact characters following each 'المادة' occurrence."""
-import re
-from pathlib import Path
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+from generate import load, RerankRetriever
+from dense import DenseRetriever
 
-t = Path("data/interim/regulations_clean.txt").read_text(encoding="utf-8")
-flat = re.sub(r"\s+", " ", t)
+QS = [
+    "ما الفرق بين حقي في الوصول وحقي في التصحيح وحقي في الإتلاف؟",
+    "ابي امسح كل شي عني عندهم، يحق لي ولا؟",
+    "الشركة خذت رقمي بدون ما اقول اوكي، وش الوضع؟",
+    "هم يبيعون معلوماتي لناس ثانية، هذا نظامي؟",
+    "ما حقوق صاحب البيانات الشخصية؟",
+]
 
-for word in ("السادسة", "السابعة", "الثامنة"):
-    print(f"===== {word} =====")
-    for m in re.finditer("المادة " + word, flat):
-        seg = flat[m.start():m.start() + 32]
-        print("  النص :", seg)
-        print("  أكواد:", [hex(ord(c)) for c in seg[13:24]])
-        print()
+recs = load()
+d, r = DenseRetriever(recs), RerankRetriever(recs)
+
+for q in QS:
+    print("\n" + "=" * 70)
+    print("السؤال:", q)
+    print("-" * 70)
+    print("dense :", "  ".join(f"م{rec['article_no']}={s:.3f}" for s, rec in d.search(q, k=3)))
+    print("rerank:", "  ".join(f"م{rec['article_no']}={s:.3f}" for s, rec in r.search(q, k=3)))

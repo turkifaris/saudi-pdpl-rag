@@ -1,7 +1,7 @@
 """Answer policy: refuse, warn, or answer, based on reranker confidence."""
 
-REFUSE_BELOW = 0.08   # أقل من ذلك: النظام لم يجد شيئاً
-WARN_BELOW = 0.30     # بين الاثنتين: إجابة مع تحذير
+REFUSE_BELOW = 0.70   # أقل من ذلك: النظام لم يجد شيئاً
+WARN_BELOW   = 0.85     # بين الاثنتين: إجابة مع تحذير
 
 REFUSAL = "لم أجد في اللائحة التنفيذية مادة تجيب هذا السؤال."
 WARNING = "⚠️ ثقة منخفضة — يُرجى مراجعة النص الرسمي للمادة."

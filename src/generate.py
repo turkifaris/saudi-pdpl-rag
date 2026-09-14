@@ -45,13 +45,26 @@ def ask_model(question: str, context: str) -> str:
     return r.json()["message"]["content"].strip()
 
 
-def answer(question: str, retriever) -> dict:
+RETRY_BELOW = 0.70   # تحت هذا نجرّب إعادة الصياغة (معايَر في eval/results.md)
+
+def answer(question: str, retriever, allow_rewrite: bool = True) -> dict:
     hits = retriever.search(question, k=TOP_K)
     top = hits[0][0]
+    rewritten = None
+
+    # التركيب: لا نلمس ما يعمل، ونعيد المحاولة فقط حين يفشل
+    if allow_rewrite and top < RETRY_BELOW:
+        from rewrite import rewrite as _rw
+        rq, changed = _rw(question)
+        if changed:
+            h2 = retriever.search(rq, k=TOP_K)
+            if h2[0][0] > top:
+                hits, top, rewritten = h2, h2[0][0], rq
+
     action, notice = decide(top)
 
     if action == "refuse":
-        return {"action": action, "score": top, "text": notice, "sources": []}
+        return {"action": action, "score": top, "text": notice, "sources": [], "rewritten": rewritten}
 
     text = ask_model(question, build_context(hits))
     return {
@@ -60,6 +73,7 @@ def answer(question: str, retriever) -> dict:
         "text": text,
         "notice": notice,
         "sources": [(r["article_label"], r["article_no"]) for _, r in hits],
+        "rewritten": rewritten,
     }
 
 
