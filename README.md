@@ -96,3 +96,57 @@ differently-licensed generator; the retrieval stack is unaffected.
 - `eval/results.md` — full methodology, ablations, rejected approaches
 - `eval/faithfulness.md` — manual review protocol and results
 - `NOTES.md` — decision log, including paths that were tried and abandoned
+
+## Running it yourself
+
+Everything runs locally. No API keys, no network calls at query time.
+
+**Requirements:** Python 3.11, [Ollama](https://ollama.com), ~6 GB free disk for
+the models, 16 GB RAM recommended.
+
+```bash
+git clone https://github.com/turkifaris/saudi-pdpl-rag.git
+cd saudi-pdpl-rag
+python3.11 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+ollama pull command-r7b-arabic
+streamlit run app.py
+```
+
+The embedding and reranking models download from Hugging Face on first run
+(~4.4 GB, once). The corpus and its vectors are already in the repository, so
+no rebuild is needed to ask questions.
+
+### Rebuilding the corpus from the source PDF
+
+The corpus and its vectors are committed, so this is only needed if you want to
+reproduce the extraction. Place the SDAIA PDF at
+`data/raw/pdpl_regulations.pdf` (see `data/raw/SOURCES.md` for where it came
+from), then:
+
+```bash
+python src/pipeline/ingest.py
+python src/pipeline/clean.py
+python src/pipeline/chunk.py
+python src/core/embed.py
+```
+
+### Reproducing the reported numbers
+
+```bash
+python src/eval/evaluate.py bm25
+python src/eval/evaluate.py dense
+python src/eval/evaluate.py rerank
+python src/eval/eval_colloquial.py
+```
+
+The first three take seconds to minutes; the last runs the full cascade and
+takes a few minutes because it calls the local model for query rewriting.
+Figures should match `eval/results.md`. If they do not, that is a bug — please
+open an issue.
+
+### Layout
+
+See `src/README.md` for what every file does. In short: `core/` is the running
+system, `pipeline/` builds the corpus, `eval/` measures it, and `archive/`
+holds one-off diagnostics and experiments that were measured and rejected.
