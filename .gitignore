@@ -1,6 +1,7 @@
 .venv/
 __pycache__/
 *.pyc
-data/raw/
+data/raw/*
+!data/raw/SOURCES.md
 .env
 .DS_Store
