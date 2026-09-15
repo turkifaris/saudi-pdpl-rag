@@ -102,3 +102,19 @@
 
 - **Kept from that work:** `get_model()` is now `@lru_cache`d, so building a second
   retriever no longer loads a second 2.2GB copy of the embedding model.
+
+- **Page-anchored citations (v1.1).** Each article record now carries the PDF page it
+  starts on, recovered from the `<<<PAGE n>>>` markers that `ingest.py` had always
+  emitted but `chunk.py` discarded. The UI renders that page from the official SDAIA PDF
+  on demand, so a citation can be verified against the source document rather than
+  trusted. The corpus text was verified byte-identical after the change (0 of 38
+  articles differed), so all measured figures still describe the same system.
+
+- **Rejected: highlighting the cited passage on the page.** `page.search_for()` never
+  matched. Diagnosis: this PDF stores Arabic as glyph runs, not words — "المادة الرابعة
+  والعشرون" comes back as `'ا' 'لما' 'دة' 'ا' 'لر' 'ا' 'بعة' 'وا' 'لعشر'`. NFKC does not
+  help because the problem is fragmentation, not encoding. Fixing it would require
+  rebuilding the text from fragments with a character-to-rectangle map. Not worth it:
+  article headings are already visually distinct (orange, bold) in this document, so the
+  page render alone delivers the verification value. Same Arabic-PDF pathology as week 1,
+  surfacing in a new place.
