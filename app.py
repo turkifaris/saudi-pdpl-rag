@@ -3,6 +3,7 @@ import streamlit as st
 _SRC = pathlib.Path(__file__).resolve().parent / "src"
 sys.path[:0] = [str(_SRC)] + [str(d) for d in _SRC.iterdir() if d.is_dir()]
 from generate import answer, load, RerankRetriever
+from pageview import render as render_page, available as pdf_available
 
 st.set_page_config(page_title="مستشار الأنظمة السعودية", page_icon="⚖️", layout="centered")
 
@@ -26,6 +27,12 @@ def boot():
     return RerankRetriever(records), {int(r["article_no"]): r for r in records}
 
 retriever, by_no = boot()
+
+
+@st.cache_data(show_spinner=False)
+def page_png(page_no: int):
+    png, _ = render_page(page_no)
+    return png
 
 st.title("⚖️ مستشار الأنظمة السعودية")
 st.caption("إجابات مستندة إلى اللائحة التنفيذية لنظام حماية البيانات الشخصية — مع ذكر رقم المادة")
@@ -51,8 +58,12 @@ go = st.button("اسأل", type="primary")
 if go and q.strip():
     t0 = time.time()
     with st.spinner("جارٍ البحث في اللائحة…"):
-        res = answer(q.strip(), retriever)
-    secs = time.time() - t0
+        st.session_state.res = answer(q.strip(), retriever)
+    st.session_state.secs = time.time() - t0
+
+if st.session_state.get("res"):
+    res = st.session_state.res
+    secs = st.session_state.secs
 
     style = {
         "answer": ("#1a7f37", "ثقة عالية"),
@@ -77,8 +88,18 @@ if go and q.strip():
         st.markdown("#### المواد المعروضة على النموذج")
         for label, no in res["sources"]:
             rec = by_no.get(int(no))
-            with st.expander(f"{label}  (مادة {no})"):
+            pg = rec.get("page") if rec else None
+            head = f"{label}  (مادة {no}"
+            head += f" · صفحة {pg})" if pg else ")"
+            with st.expander(head):
                 st.write(rec["text"] if rec else "—")
+                if pg and pdf_available():
+                    if st.checkbox("📄 اعرض الصفحة من المستند الرسمي", key=f"pg_{no}"):
+                        png = page_png(int(pg))
+                        if png:
+                            st.image(png, caption=f"{label} — صفحة {pg} من ملف سدايا")
+                        else:
+                            st.info("تعذّر عرض الصفحة.")
                 if rec and rec.get("source_url"):
                     st.markdown(f'<span class="meta">المصدر: {rec["source_url"]}</span>',
                                 unsafe_allow_html=True)
