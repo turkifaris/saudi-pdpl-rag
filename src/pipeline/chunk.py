@@ -13,7 +13,24 @@ DOC = "اللائحة التنفيذية لنظام حماية البيانات 
 URL = "https://sdaia.gov.sa"
 
 flat = re.sub(r"\s+", " ", SRC.read_text(encoding="utf-8"))
-flat = re.sub(r"<<<PAGE \d+>>>", " ", flat)
+_parts = re.split(r"<<<PAGE (\d+)>>>", flat)
+_buf, _pages, _pos = [_parts[0]], [], len(_parts[0])
+for _i in range(1, len(_parts), 2):
+    _buf.append(" "); _pos += 1
+    _pages.append((_pos, int(_parts[_i])))
+    _buf.append(_parts[_i + 1]); _pos += len(_parts[_i + 1])
+flat = "".join(_buf)
+
+
+def page_of(off: int) -> int:
+    """رقم الصفحة التي يقع فيها هذا الموضع من النص."""
+    p = 1
+    for start, num in _pages:
+        if start <= off:
+            p = num
+        else:
+            break
+    return p
 
 # 1) اجمع بدايات المواد الحقيقية
 starts = []
@@ -47,7 +64,8 @@ for i, (n, s, e) in enumerate(first):
         "title": " ".join(title.split()),
         "text": " ".join(body.split()),
         "source_url": URL,
-        "retrieved_at": str(date.today()),
+        "page": page_of(s),
+            "retrieved_at": str(date.today()),
     })
 
 records.sort(key=lambda r: r["article_no"])
