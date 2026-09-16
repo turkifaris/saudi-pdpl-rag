@@ -8,11 +8,13 @@ REFUSAL = "لم أجد في اللائحة التنفيذية مادة تجيب 
 WARNING = "⚠️ ثقة منخفضة — يُرجى مراجعة النص الرسمي للمادة."
 
 
-def decide(top_score: float) -> tuple[str, str | None]:
+def decide(top_score: float, refuse: float = None, warn: float = None) -> tuple[str, str | None]:
     """Return (action, notice). action ∈ {refuse, warn, answer}."""
-    if top_score < REFUSE_BELOW:
+    refuse = REFUSE_BELOW if refuse is None else refuse
+    warn = WARN_BELOW if warn is None else warn
+    if top_score < refuse:
         return "refuse", REFUSAL
-    if top_score < WARN_BELOW:
+    if top_score < warn:
         return "warn", WARNING
     return "answer", None
 

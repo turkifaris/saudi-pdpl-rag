@@ -47,3 +47,14 @@ def render(page_no: int, highlight: str = "", dpi: int = 130):
     png = pix.tobytes("png")
     doc.close()
     return png, found
+
+
+def render_from(data: bytes, page_no: int, dpi: int = 130):
+    """عرض صفحة من بايتات PDF مرفوع."""
+    doc = fitz.open(stream=data, filetype="pdf")
+    if not (1 <= page_no <= doc.page_count):
+        doc.close()
+        return None
+    png = doc[page_no - 1].get_pixmap(dpi=dpi).tobytes("png")
+    doc.close()
+    return png
