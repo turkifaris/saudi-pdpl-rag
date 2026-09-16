@@ -13,6 +13,24 @@ at query time.
 | **Executive Regulations** | 38 articles, pre-indexed | Measured — all figures below describe this mode |
 | **Uploaded document** | Any Arabic PDF up to 20MB, indexed at query time | Experimental — generic chunking, threshold exposed to the user |
 
+## Interface
+
+**Executive Regulations mode** — grounded answer with a confidence score and an article
+citation. The question was typed informally and rewritten before retrieval.
+
+![answer](docs/01-answer.png)
+
+Any citation can be opened as the page of the official source document.
+
+![source page](docs/02-source-page.png)
+
+**Uploaded-document mode** — the same pipeline over a user-supplied Arabic PDF, with the
+experimental notice and the rejection threshold exposed.
+
+![upload](docs/03-upload-answer.png)
+
+![upload source](docs/04-upload-source.png)
+
 ## Pipeline
 
 ```mermaid
