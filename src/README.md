@@ -51,7 +51,7 @@ Kept deliberately as evidence, not wired into the running system.
   the tools used to take article detection from 32/38 to 38/38.
 - **Rejected components:** `hybrid.py` (BM25+dense RRF fusion),
   `arabic.py` + `embed_folded.py` + `fold_retrieve.py` + `probe_fold.py`
-  (orthographic folding). Both were measured and rejected; see `NOTES.md`.
+  (orthographic folding). Both were measured and not shipped; figures in `eval/results.md`.
 - **Probes:** `probe.py`, `probe_rw.py` — the diagnostics that exposed the
   reranker's collapse on non-formal Arabic.
 - `embedding_demo.py` — week-0 scratch.
