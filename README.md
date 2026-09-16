@@ -1,108 +1,157 @@
-# Saudi PDPL RAG Assistant
+# Saudi PDPL RAG — مستشار الأنظمة السعودية
 
-An Arabic retrieval-augmented generation system that answers questions about
-Saudi Arabia's Personal Data Protection Law (PDPL) and its executive
-regulations, citing the exact article number and official source.
+An Arabic retrieval-augmented question answering system over the Executive
+Regulations of the Saudi Personal Data Protection Law. Answers are generated only
+from retrieved articles, cite the article number, and can be verified against the
+page of the official source document. Runs entirely locally — no external API calls
+at query time.
 
-**Status:** week 4 complete — retrieval, rejection policy and grounded generation
-evaluated. UI and deployment in week 5.
+## Modes
 
-## Why
-General-purpose LLMs hallucinate article numbers in legal text, and organizations
-handling sensitive documents cannot send them to external APIs. This system is
-grounded in a controlled corpus and runs entirely locally.
+| Mode | Corpus | Status |
+|---|---|---|
+| **Executive Regulations** | 38 articles, pre-indexed | Measured — all figures below describe this mode |
+| **Uploaded document** | Any Arabic PDF up to 20MB, indexed at query time | Experimental — generic chunking, threshold exposed to the user |
+
+## Pipeline
+
+```mermaid
+flowchart TD
+    Q["Question"] --> D["Dense retrieval — bge-m3<br/>top 20"]
+    D --> R["Cross-encoder rerank<br/>bge-reranker-v2-m3"]
+    R --> T{"score ≥ 0.70?"}
+    T -->|yes| P
+    T -->|no| W["Query rewriting<br/>colloquial → legal register"]
+    W --> R2["Retrieve + rerank again"]
+    R2 --> T2{"score ≥ 0.70?"}
+    T2 -->|no| X["Refuse"]
+    T2 -->|yes| P
+    P["Rejection policy<br/>0.70 refuse · 0.85 warn"] --> G["Generation<br/>command-r7b-arabic · top 3 · temp 0.1"]
+    G --> A["Answer + article number + page + confidence"]
+```
 
 ## Stack
-Python 3.11 · PyTorch (MPS) · sentence-transformers · dense retrieval (bge-m3) ·
-Ollama for local generation · Streamlit
+
+Python 3.11 · PyTorch (MPS) · sentence-transformers · Ollama · Streamlit · PyMuPDF
+
+| Component | Model | Licence |
+|---|---|---|
+| Embeddings | BAAI/bge-m3 | MIT |
+| Reranking | BAAI/bge-reranker-v2-m3 | Apache 2.0 |
+| Generation & query rewriting | command-r7b-arabic | CC-BY-NC (non-commercial) |
 
 ## Corpus
-| Metric | Value |
+
+| | |
 |---|---|
 | Source | Executive Regulations of the Saudi PDPL (SDAIA) |
 | Articles extracted | 38 / 38 |
-| Mean article length | 1,006 chars |
+| Mean article length | 1,006 characters |
 | Manual QA | 20 articles reviewed — `eval/corpus_qa.md` |
 
-Extraction required solving four Arabic-specific problems: Unicode presentation forms,
-RTL block ordering, bidi-displaced punctuation, and intra-word spacing from PDF
-justification. Article detection improved from 32/38 to 38/38 as each was diagnosed.
+Arabic PDF extraction required handling Unicode presentation forms, right-to-left
+block ordering, bidi-displaced punctuation, and intra-word spacing introduced by PDF
+justification. Article detection: 32/38 → 38/38.
+
+## Evaluation
+
+Two hand-labelled question sets, gold-labelled by reviewing retrieved candidates:
+
+| Set | Questions | Purpose |
+|---|---|---|
+| `eval/eval_set.json` | 85 (75 in-scope + 10 out-of-scope), 5 question types | Retrieval quality |
+| `eval/colloquial.json` | 22 (14 in-scope + 8 out-of-scope) | Behaviour on questions as a real user types them |
+
+`src/eval/regression.py` compares all retrieval metrics against a committed baseline.
 
 ## Retrieval results
-| System | Hit@1 | Hit@5 | paraphrase | nDCG@10 |
-|---|---|---|---|---|
-| BM25 baseline | 0.55 | 0.73 | 0.53 | 0.68 |
-| + dense (e5-small) | 0.68 | 0.88 | 0.76 | 0.79 |
-| + bge-m3 | 0.80 | 0.93 | 0.88 | 0.86 |
-| **− derived title** | 0.79 | **0.97** | **0.94** | **0.88** |
 
-Evaluated on 85 hand-labelled Arabic questions across five question types.
+Measured on the 75 in-scope questions.
 
-- Hybrid BM25+dense fusion was tested and **rejected** (Hit@5 0.85 < 0.93): RRF ranks by
-  position, destroying the score magnitude the rejection threshold depends on.
-- Arabic-specialised embeddings were benchmarked and **lost** to multilingual bge-m3
-  (paraphrase 0.76 vs 0.88).
-- The largest single gain came from *removing* a component, not adding one.
+| System | Hit@1 | Hit@5 | Rec@5 | MRR | nDCG@10 |
+|---|---|---|---|---|---|
+| BM25 baseline | 0.55 | 0.73 | 0.71 | 0.64 | 0.68 |
+| Dense (bge-m3) | 0.79 | 0.99 | 0.97 | 0.86 | 0.88 |
+| **+ cross-encoder rerank** | **0.91** | **1.00** | 0.97 | **0.94** | **0.94** |
 
-## Rejection policy
-Two thresholds on the top-1 retrieval score: refuse below 0.08, warn below 0.30.
-96% precision on confidently-answered questions. An out-of-scope question is answered
-with an explicit refusal rather than a guess.
+Median top-1 score, in-scope vs out-of-scope: **0.81 vs 0.05** (16× separation), which
+is what makes the rejection threshold robust. Under BM25 the same gap is 1.4×.
 
-## Generation results
-Identical contexts, identical system prompt, identical temperature (0.1) — only the
-model varies. 16 in-scope + 4 out-of-scope questions.
+## End-to-end results
 
-| Model | cited | cited correctly | Arabic purity | out-of-scope refusal |
+Rejection policy: refuse below 0.70, warn below 0.85. Query rewriting is invoked only
+when the first retrieval scores below threshold.
+
+| Question set | Coverage | Precision | Out-of-scope blocked |
+|---|---|---|---|
+| Formal (75 questions) | 91% | 90% | 100% |
+| Colloquial (14 questions) | 79% | 91% | 88% |
+
+Threshold behaviour is flat across 0.65–0.80, so the system does not depend on fine
+tuning of that value.
+
+## Generation
+
+Three models compared on identical retrieved contexts, identical system prompt,
+identical temperature (0.1).
+
+| Model | Cited | Cited correctly | Arabic purity | Out-of-scope refusal |
 |---|---|---|---|---|
 | **command-r7b-arabic** | **93%** | **93%** | 100% | 100% |
 | qwen2.5:7b-instruct | 68% | 68% | 90% | 100% |
 | ALLaM-7B-Instruct-preview | 43% | 43% | 100% | 100% |
 
-**Zero incorrect citations across all three models** — `cited` equals `cited correctly`
-everywhere. The failure mode is omission, never fabrication: no model invented an
-article number. For a legal assistant this is the property that matters most.
+**No incorrect citations in any model** — cited and cited-correctly are identical
+throughout. The failure mode is omission, never fabrication.
 
 ### Manual faithfulness review
-20 answers from the selected model, reviewed one by one (`eval/faithfulness.md`):
 
-| Metric | Value |
+20 answers from the selected model, reviewed individually (`eval/faithfulness.md`):
+
+| | |
 |---|---|
 | Fully supported by the cited article | 93% |
 | **Hallucinations** | **0** |
-| False refusals (gold article was in context) | **0** |
+| False refusals | **0** |
 | Correct refusals on out-of-scope questions | 4 / 4 |
 
-The review also exposed a bug in the *evaluation harness*: the citation detector matched
-`المادة` only and missed clitic-prefixed forms (للمادة / بالمادة / والمادة), depressing
-every reported citation rate by 5–12 points. Fixed and rescored; the model ranking did
-not change. See `eval/results.md`.
+## Uploaded-document mode
 
-## Licence note
-`command-r7b-arabic` is released under **CC-BY-NC (non-commercial)**. It is used here for
-a research and portfolio project. A commercial deployment would require substituting a
-differently-licensed generator; the retrieval stack is unaffected.
+Generic chunking (900 characters, 150 overlap, sentence boundaries, page tracked),
+in-memory index, same reranker and generation. Scanned PDFs are detected and reported.
+
+Calibrated by running this corpus through the upload path against the same 85 questions:
+
+| Pipeline | Hit@1 | Hit@5 |
+|---|---|---|
+| Article-aware chunking | 0.907 | 1.000 |
+| Generic chunking | 0.853 | 0.973 |
+
+| Threshold | Coverage | Precision | Out-of-scope blocked |
+|---|---|---|---|
+| 0.30 | 92% | 84% | 100% |
+| 0.50 (default) | 81% | 87% | 100% |
+| 0.70 | 73% | 87% | 100% |
+
+The threshold is exposed as a slider, since it is calibrated on one document only.
+Query rewriting is disabled on this path — it encodes this corpus's vocabulary.
 
 ## Known limitations
-- Corpus is the Executive Regulations only. The Law itself is a scanned PDF and needs
-  OCR — deferred to v2.
-- Only 10 out-of-scope questions, so the rejection threshold is tuned on a coarse sample.
-- `multi` questions: retrieval surfaces all three articles, generation covers 1–2.
-- Colloquial phrasing with no lexical overlap with the legal register still fails
-  (e.g. «حساب», a word absent from the Regulations). Candidate v2 fix: query rewriting.
+
+- Corpus covers the Executive Regulations only. The Law itself is a scanned PDF and
+  requires OCR. Cross-border data transfer is governed by a separate regulation and is
+  not in this corpus.
+- 10 out-of-scope questions in the main set, so the rejection threshold is tuned on a
+  coarse sample.
+- `multi` questions: retrieval surfaces all relevant articles, generation covers 1–2.
+- Colloquial questions whose key term is misspelled are not recovered.
 - Manual review by a single annotator; no inter-annotator agreement measured.
+- Answers cite a page but the passage is not highlighted: this PDF stores Arabic as
+  glyph runs rather than words, so text search on the page does not match.
 
-## Documentation
-- `eval/results.md` — full methodology, ablations, rejected approaches
-- `eval/faithfulness.md` — manual review protocol and results
-- `NOTES.md` — decision log, including paths that were tried and abandoned
+## Running it
 
-## Running it yourself
-
-Everything runs locally. No API keys, no network calls at query time.
-
-**Requirements:** Python 3.11, [Ollama](https://ollama.com), ~6 GB free disk for
-the models, 16 GB RAM recommended.
+**Requirements:** Python 3.11, [Ollama](https://ollama.com), ~6 GB free disk, 16 GB RAM.
 
 ```bash
 git clone https://github.com/turkifaris/saudi-pdpl-rag.git
@@ -113,16 +162,12 @@ ollama pull command-r7b-arabic
 streamlit run app.py
 ```
 
-The embedding and reranking models download from Hugging Face on first run
-(~4.4 GB, once). The corpus and its vectors are already in the repository, so
-no rebuild is needed to ask questions.
+Embedding and reranking models download from Hugging Face on first run (~4.4 GB, once).
+The corpus and its vectors are committed, so no rebuild is needed.
 
-### Rebuilding the corpus from the source PDF
+### Rebuilding the corpus
 
-The corpus and its vectors are committed, so this is only needed if you want to
-reproduce the extraction. Place the SDAIA PDF at
-`data/raw/pdpl_regulations.pdf` (see `data/raw/SOURCES.md` for where it came
-from), then:
+Place the source PDF at `data/raw/pdpl_regulations.pdf` — see `data/raw/SOURCES.md`.
 
 ```bash
 python src/pipeline/ingest.py
@@ -131,22 +176,34 @@ python src/pipeline/chunk.py
 python src/core/embed.py
 ```
 
-### Reproducing the reported numbers
+### Reproducing the figures
 
 ```bash
 python src/eval/evaluate.py bm25
 python src/eval/evaluate.py dense
 python src/eval/evaluate.py rerank
 python src/eval/eval_colloquial.py
+python src/eval/eval_upload.py
+python src/eval/regression.py --full
 ```
 
-The first three take seconds to minutes; the last runs the full cascade and
-takes a few minutes because it calls the local model for query rewriting.
-Figures should match `eval/results.md`. If they do not, that is a bug — please
-open an issue.
+## Repository layout
 
-### Layout
+```
+app.py              Streamlit interface
+src/core/           the running system: retrieval, reranking, rewriting, policy, generation
+src/pipeline/       corpus construction from the source PDF
+src/eval/           evaluation, calibration and the regression test
+src/archive/        one-off diagnostics and measured-and-rejected experiments
+data/               corpus, embeddings, extraction intermediates
+eval/               question sets, gold labels, results, baseline
+```
 
-See `src/README.md` for what every file does. In short: `core/` is the running
-system, `pipeline/` builds the corpus, `eval/` measures it, and `archive/`
-holds one-off diagnostics and experiments that were measured and rejected.
+`src/README.md` documents every file.
+
+## Licence
+
+Code: MIT. The corpus is an SDAIA publication and the generation model is
+non-commercial — see `NOTICE`.
+
+This project is not legal advice and is not affiliated with SDAIA.

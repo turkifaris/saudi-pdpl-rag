@@ -48,13 +48,15 @@ def ask_model(question: str, context: str) -> str:
 
 RETRY_BELOW = 0.70   # تحت هذا نجرّب إعادة الصياغة (معايَر في eval/results.md)
 
-def answer(question: str, retriever, allow_rewrite: bool = True) -> dict:
+def answer(question: str, retriever, allow_rewrite: bool = True,
+           refuse_below: float = None, warn_below: float = None) -> dict:
     hits = retriever.search(question, k=TOP_K)
     top = hits[0][0]
     rewritten = None
 
     # التركيب: لا نلمس ما يعمل، ونعيد المحاولة فقط حين يفشل
-    if allow_rewrite and top < RETRY_BELOW:
+    _retry = RETRY_BELOW if refuse_below is None else refuse_below
+    if allow_rewrite and top < _retry:
         from rewrite import rewrite as _rw
         rq, changed = _rw(question)
         if changed:
@@ -62,7 +64,7 @@ def answer(question: str, retriever, allow_rewrite: bool = True) -> dict:
             if h2[0][0] > top:
                 hits, top, rewritten = h2, h2[0][0], rq
 
-    action, notice = decide(top)
+    action, notice = decide(top, refuse_below, warn_below)
 
     if action == "refuse":
         return {"action": action, "score": top, "text": notice, "sources": [], "rewritten": rewritten}
